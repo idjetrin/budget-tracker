@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Budget Tracker</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f9;
+      padding: 20px;
+      max-width: 500px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      color: #2c3e50;
+      font-size: 24px;
+    }
+
+    input, select {
+      display: block;
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 16px;
+      box-sizing: border-box;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      background-color: #27ae60;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      font-weight: bold;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+      margin-top: 20px;
+    }
+
+    li {
+      background-color: white;
+      padding: 12px;
+      margin-bottom: 8px;
+      border-radius: 6px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    h3 {
+      color: #27ae60;
+      font-size: 20px;
+      margin-top: 20px;
+    }
+    #ringkasanKategori {
+  margin-top: 15px;
+  padding-top: 15px;
+  border-top: 1px solid #ddd;
+}
+
+#ringkasanKategori p {
+  margin: 4px 0;
+  color: #555;
+}
+    .filter-tanggal {
+  margin-bottom: 15px;
+}
+
+.filter-tanggal label {
+  font-size: 14px;
+  color: #555;
+}
+
+#tombolResetFilter {
+  background-color: #7f8c8d;
+  margin-top: 8px;
+}
+  </style>
+</head>
+<body>
+  <h1>Expense Tracker Saya</h1>
+
+  <input type="text" id="namaPengeluaran" placeholder="Nama pengeluaran">
+  <input type="number" id="jumlahPengeluaran" placeholder="Jumlah (Rp)">
+  <select id="kategoriPengeluaran">
+    <option value=""disabled selected>Pilih Kategori</option>
+  <option value="Makan">Makan</option>
+  <option value="Transport">Transport</option>
+  <option value="Hiburan">Hiburan</option>
+  <option value="Tagihan">Tagihan</option>
+  <option value="Pendidikan">Pendidikan</option>  
+  <option value="Lainnya">Lainnya</option>
+</select>
+  <button>Tambah</button>
+<div class="filter-tanggal">
+  <label>Dari:</label>
+  <input type="date" id="filterDari">
+  <label>Sampai:</label>
+  <input type="date" id="filterSampai">
+  <button id="tombolFilter" type="button">Terapkan Filter</button>
+  <button id="tombolResetFilter" type="button">Reset</button>
+</div>
+  <ul id="daftarPengeluaran"></ul>
+
+  <h3>Total: Rp <span id="totalPengeluaran">0</span></h3>
+  <div id="ringkasanPeriode"></div>
+  <div id="ringkasanKategori"></div>
+  
+    <script>
+  let daftar = JSON.parse(localStorage.getItem("daftarPengeluaran")) || [];
+  let total = 0;
+let filterAktif = { dari: null, sampai: null };
+  function tampilkanUlang() {
+  document.getElementById("daftarPengeluaran").innerHTML = "";
+  total = 0;
+
+  let dataTampil = daftar;
+  if (filterAktif.dari && filterAktif.sampai) {
+    dataTampil = daftar.filter(function(item) {
+      return item.tanggalISO >= filterAktif.dari && item.tanggalISO <= filterAktif.sampai;
+    });
+  }
+
+  dataTampil.forEach(function(item, index) {
+      let li = document.createElement("li");
+      li.textContent = item.tanggal + " | [" + item.kategori + "] " + item.nama + " - Rp " + item.jumlah.toLocaleString("id-ID") + " ";
+
+      let tombolHapus = document.createElement("button");
+      tombolHapus.textContent = "Hapus";
+      tombolHapus.style.marginLeft = "10px";
+      tombolHapus.style.width = "auto";
+      tombolHapus.style.backgroundColor = "#e74c3c";
+      tombolHapus.style.padding = "5px 10px";
+
+      tombolHapus.addEventListener("click", function() {
+  let indexAsli = daftar.indexOf(item);
+  daftar.splice(indexAsli, 1);
+        localStorage.setItem("daftarPengeluaran", JSON.stringify(daftar));
+        tampilkanUlang();
+      });
+
+      li.appendChild(tombolHapus);
+      document.getElementById("daftarPengeluaran").appendChild(li);
+      total += item.jumlah;
+    });
+    document.getElementById("totalPengeluaran").textContent = total.toLocaleString("id-ID");
+    let hariIniISO = new Date().toISOString().split("T")[0];
+let bulanIniISO = hariIniISO.slice(0, 7);
+
+let totalHariIni = 0;
+let totalBulanIni = 0;
+daftar.forEach(function(item) {
+  if (item.tanggalISO === hariIniISO) {
+    totalHariIni += item.jumlah;
+  }
+  if (item.tanggalISO && item.tanggalISO.slice(0, 7) === bulanIniISO) {
+    totalBulanIni += item.jumlah;
+  }
+});
+
+document.getElementById("ringkasanPeriode").innerHTML =
+  "<p><b>Hari ini:</b> Rp " + totalHariIni.toLocaleString("id-ID") + "</p>" +
+  "<p><b>Bulan ini:</b> Rp " + totalBulanIni.toLocaleString("id-ID") + "</p>";
+  let perKategori = {};
+    dataTampil.forEach(function(item) {
+      if (!perKategori[item.kategori]) {
+        perKategori[item.kategori] = 0;
+      }
+      perKategori[item.kategori] += item.jumlah;
+    });
+
+    let html = "";
+    for (let kategori in perKategori) {
+      html += "<p>" + kategori + ": Rp " + perKategori[kategori].toLocaleString("id-ID") + "</p>";
+    }
+    document.getElementById("ringkasanKategori").innerHTML = html;}
+
+  document.querySelector("button").addEventListener("click", function() {
+    let nama = document.getElementById("namaPengeluaran").value;
+    let jumlah = Number(document.getElementById("jumlahPengeluaran").value);
+    let kategori = document.getElementById("kategoriPengeluaran").value;
+
+    if (nama === "" || jumlah <= 0 || kategori === "") {
+  alert("Isi nama, jumlah, dan pilih kategori dulu ya!");
+  return;
+}
+
+    let sekarang = new Date();
+let tanggalSekarang = sekarang.toLocaleDateString("id-ID");
+let tanggalISO = sekarang.toISOString().split("T")[0];
+daftar.push({ nama: nama, jumlah: jumlah, kategori: kategori, tanggal: tanggalSekarang, tanggalISO: tanggalISO });
+    localStorage.setItem("daftarPengeluaran", JSON.stringify(daftar));
+
+    tampilkanUlang();
+
+    document.getElementById("namaPengeluaran").value = "";
+    document.getElementById("jumlahPengeluaran").value = "";
+  });
+document.getElementById("tombolFilter").addEventListener("click", function() {
+  filterAktif.dari = document.getElementById("filterDari").value;
+  filterAktif.sampai = document.getElementById("filterSampai").value;
+  tampilkanUlang();
+});
+
+document.getElementById("tombolResetFilter").addEventListener("click", function() {
+  filterAktif.dari = null;
+  filterAktif.sampai = null;
+  document.getElementById("filterDari").value = "";
+  document.getElementById("filterSampai").value = "";
+  tampilkanUlang();
+});
+  tampilkanUlang();
+  </script>
+</body>
+</html>
