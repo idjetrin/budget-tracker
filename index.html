@@ -90,17 +90,19 @@
 </div>
 
   <input type="text" id="namaPengeluaran" placeholder="Nama pengeluaran">
-  <input type="number" id="jumlahPengeluaran" placeholder="Jumlah (Rp)">
+  <input type="text" inputmode="numeric" id="jumlahPengeluaran" placeholder="Jumlah (Rp)">
+  <input type="date" id="tanggalManual">
   <select id="kategoriPengeluaran">
     <option value=""disabled selected>Pilih Kategori</option>
-  <option value="Makan">Makan</option>
+  <option value="Konsumsi">Konsumsi</option>
+    <option value="Kesehatan">Kesehatan</option>
   <option value="Transport">Transport</option>
   <option value="Hiburan">Hiburan</option>
   <option value="Tagihan">Tagihan</option>
   <option value="Pendidikan">Pendidikan</option>  
   <option value="Lainnya">Lainnya</option>
 </select>
-  <button>Tambah</button>
+  <button id="tombolTambah">Tambah</button>
 <div class="filter-tanggal" id="panelFilter" style="display: none;">
   <h3 style="margin-top: 8px; margin-bottom: 10px; font-size: 16px; color: #2c3e50;">Cari Berdasarkan Tanggal</h3>
   <label>Dari:</label>
@@ -116,8 +118,23 @@
   <div id="ringkasanPeriode"></div>
   <div id="ringkasanKategori"></div>
   
-    <script>
-  let daftar = JSON.parse(localStorage.getItem("daftarPengeluaran")) || [];
+    
+      <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script>
+      // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyBotDK5N3vEJzg2bl9dEnJKJ_bw0Gw_JqY",
+  authDomain: "budget-tracker-app-final.firebaseapp.com",
+  projectId: "budget-tracker-app-final",
+  storageBucket: "budget-tracker-app-final.firebasestorage.app",
+  messagingSenderId: "318997238564",
+  appId: "1:318997238564:web:b438ca71a133ca396c59b1",
+  measurementId: "G-ERLPHSZ8KD"
+};
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.firestore();
+  let daftar = [];
   let total = 0;
 let filterAktif = { dari: null, sampai: null };
   function tampilkanUlang() {
@@ -143,11 +160,8 @@ let filterAktif = { dari: null, sampai: null };
       tombolHapus.style.padding = "5px 10px";
 
       tombolHapus.addEventListener("click", function() {
-  let indexAsli = daftar.indexOf(item);
-  daftar.splice(indexAsli, 1);
-        localStorage.setItem("daftarPengeluaran", JSON.stringify(daftar));
-        tampilkanUlang();
-      });
+  db.collection("pengeluaran").doc(item.id).delete();
+});
 
       li.appendChild(tombolHapus);
       document.getElementById("daftarPengeluaran").appendChild(li);
@@ -185,9 +199,10 @@ document.getElementById("ringkasanPeriode").innerHTML =
     }
     document.getElementById("ringkasanKategori").innerHTML = html;}
 
-  document.querySelector("button").addEventListener("click", function() {
+  document.getElementById("tombolTambah").addEventListener("click", function() {
     let nama = document.getElementById("namaPengeluaran").value;
-    let jumlah = Number(document.getElementById("jumlahPengeluaran").value);
+    let jumlahMentah = document.getElementById("jumlahPengeluaran").value.replace(/\./g, "");
+let jumlah = Number(jumlahMentah);
     let kategori = document.getElementById("kategoriPengeluaran").value;
 
     if (nama === "" || jumlah <= 0 || kategori === "") {
@@ -195,13 +210,17 @@ document.getElementById("ringkasanPeriode").innerHTML =
   return;
 }
 
-    let sekarang = new Date();
-let tanggalSekarang = sekarang.toLocaleDateString("id-ID");
-let tanggalISO = sekarang.toISOString().split("T")[0];
-daftar.push({ nama: nama, jumlah: jumlah, kategori: kategori, tanggal: tanggalSekarang, tanggalISO: tanggalISO });
-    localStorage.setItem("daftarPengeluaran", JSON.stringify(daftar));
-
-    tampilkanUlang();
+    let tanggalISO = document.getElementById("tanggalManual").value;
+let tanggalSekarang = new Date(tanggalISO).toLocaleDateString("id-ID");
+db.collection("pengeluaran").add({
+  nama: nama,
+  jumlah: jumlah,
+  kategori: kategori,
+  tanggal: tanggalSekarang,
+  tanggalISO: tanggalISO
+}).catch(function(error) {
+  alert("Gagal simpan data: " + error.message);
+});
 
     document.getElementById("namaPengeluaran").value = "";
     document.getElementById("jumlahPengeluaran").value = "";
@@ -219,6 +238,14 @@ document.getElementById("tombolResetFilter").addEventListener("click", function(
   document.getElementById("filterSampai").value = "";
   tampilkanUlang();
 });
+  document.getElementById("jumlahPengeluaran").addEventListener("input", function(e) {
+  let angka = e.target.value.replace(/\D/g, "");
+  if (angka === "") {
+    e.target.value = "";
+    return;
+  }
+  e.target.value = Number(angka).toLocaleString("id-ID");
+});
     document.getElementById("tombolToggleFilter").addEventListener("click", function() {
   let panel = document.getElementById("panelFilter");
   if (panel.style.display === "none") {
@@ -227,7 +254,16 @@ document.getElementById("tombolResetFilter").addEventListener("click", function(
     panel.style.display = "none";
   }
 });  
+  db.collection("pengeluaran").orderBy("tanggalISO").onSnapshot(function(snapshot) {
+  daftar = [];
+  snapshot.forEach(function(doc) {
+    let item = doc.data();
+    item.id = doc.id;
+    daftar.push(item);
+  });
+    document.getElementById("tanggalManual").value = new Date().toISOString().split("T")[0];
   tampilkanUlang();
+});
   </script>
 </body>
 </html>
