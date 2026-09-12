@@ -84,7 +84,10 @@
   </style>
 </head>
 <body>
+  <div style="display: flex; justify-content: space-between; align-items: center;">
   <h1>Expense Tracker Saya</h1>
+  <button id="tombolToggleFilter" type="button" style="width: auto; padding: 8px 12px; font-size: 20px; background-color: #27a860;">☰</button>
+</div>
 
   <input type="text" id="namaPengeluaran" placeholder="Nama pengeluaran">
   <input type="number" id="jumlahPengeluaran" placeholder="Jumlah (Rp)">
@@ -98,7 +101,8 @@
   <option value="Lainnya">Lainnya</option>
 </select>
   <button>Tambah</button>
-<div class="filter-tanggal">
+<div class="filter-tanggal" id="panelFilter" style="display: none;">
+  <h3 style="margin-top: 8px; margin-bottom: 10px; font-size: 16px; color: #2c3e50;">Cari Berdasarkan Tanggal</h3>
   <label>Dari:</label>
   <input type="date" id="filterDari">
   <label>Sampai:</label>
@@ -215,6 +219,14 @@ document.getElementById("tombolResetFilter").addEventListener("click", function(
   document.getElementById("filterSampai").value = "";
   tampilkanUlang();
 });
+    document.getElementById("tombolToggleFilter").addEventListener("click", function() {
+  let panel = document.getElementById("panelFilter");
+  if (panel.style.display === "none") {
+    panel.style.display = "block";
+  } else {
+    panel.style.display = "none";
+  }
+});  
   tampilkanUlang();
   </script>
 </body>
