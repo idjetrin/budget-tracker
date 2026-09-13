@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Budget Tracker</title>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Budget Tracker</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -68,6 +70,98 @@
   margin: 4px 0;
   color: #555;
 }
+    #statistikBox {
+  margin-top: 20px;
+  padding: 15px;
+  background-color: #ecf0f1;
+  border-radius: 8px;
+  border-left: 4px solid #3498db;
+}
+
+#statistikBox h4 {
+  margin: 0 0 10px 0;
+  color: #2c3e50;
+  font-size: 16px;
+}
+
+#statistikBox p {
+  margin: 4px 0;
+  color: #444;
+  font-size: 14px;
+}
+
+#statistikBox .highlight {
+  font-weight: bold;
+  color: #27ae60;
+}
+    #grafikBox {
+  margin-top: 20px;
+  padding: 15px;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+    #statistikAlasanBox {
+  margin-top: 20px;
+  padding: 15px;
+  background-color: #fff9e6;
+  border-radius: 8px;
+  border-left: 4px solid #f39c12;
+}
+
+#statistikAlasanBox h4 {
+  margin: 0 0 10px 0;
+  color: #2c3e50;
+  font-size: 16px;
+}
+
+#statistikAlasanBox p {
+  margin: 4px 0;
+  color: #444;
+  font-size: 14px;
+  display: flex;
+  justify-content: space-between;
+}
+
+#statistikAlasanBox .highlight {
+  font-weight: bold;
+  color: #e67e22;
+}
+    #exportBox {
+  margin-top: 20px;
+  padding: 15px;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+    #toastBox {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #2c3e50;
+  color: white;
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-size: 14px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s, bottom 0.3s;
+  z-index: 9999;
+  max-width: 90%;
+  text-align: center;
+}
+
+#toastBox.show {
+  opacity: 1;
+  bottom: 40px;
+  pointer-events: auto;
+}
+
+#toastBox.success { background-color: #27ae60; }
+#toastBox.error   { background-color: #e74c3c; }
+#toastBox.info    { background-color: #3498db; }
     .filter-tanggal {
   margin-bottom: 15px;
 }
@@ -102,22 +196,70 @@
   <option value="Pendidikan">Pendidikan</option>  
   <option value="Lainnya">Lainnya</option>
 </select>
+  <select id="triggerPengeluaran">
+  <option value="">Pilih Alasan (opsional)</option>
+  <option value="Lapar">Lapar</option>
+  <option value="Bosan">Bosan</option>
+  <option value="Stress">Stress</option>
+  <option value="Sosial">Sosial</option>
+  <option value="Kebutuhan">Kebutuhan</option>
+  <option value="Iseng">Iseng</option>
+  <option value="Hadiah">Hadiah</option>
+  <option value="Lainnya">Lainnya</option>
+</select>
   <button id="tombolTambah">Tambah</button>
 <div class="filter-tanggal" id="panelFilter" style="display: none;">
   <h3 style="margin-top: 8px; margin-bottom: 10px; font-size: 16px; color: #2c3e50;">Cari Berdasarkan Tanggal</h3>
-  <label>Dari:</label>
-  <input type="date" id="filterDari">
-  <label>Sampai:</label>
-  <input type="date" id="filterSampai">
-  <button id="tombolFilter" type="button">Terapkan Filter</button>
-  <button id="tombolResetFilter" type="button">Reset</button>
+<label>Dari:</label>
+<input type="date" id="filterDari">
+<label>Sampai:</label>
+<input type="date" id="filterSampai">
+<label>Kategori:</label>
+<select id="filterKategori">
+  <option value="">Semua Kategori</option>
+  <option value="Konsumsi">Konsumsi</option>
+  <option value="Kesehatan">Kesehatan</option>
+  <option value="Transport">Transport</option>
+  <option value="Hiburan">Hiburan</option>
+  <option value="Tagihan">Tagihan</option>
+  <option value="Pendidikan">Pendidikan</option>
+  <option value="Lainnya">Lainnya</option>
+</select>
+  <label>Alasan:</label>
+<select id="filterAlasan">
+  <option value="">Semua Alasan</option>
+  <option value="Lapar">✨ Lapar</option>
+  <option value="Bosan">✨ Bosan</option>
+  <option value="Stress">✨ Stress</option>
+  <option value="Sosial">✨ Sosial</option>
+  <option value="Kebutuhan">✨ Kebutuhan</option>
+  <option value="Iseng">✨ Iseng</option>
+  <option value="Hadiah">✨ Hadiah</option>
+  <option value="Lainnya">✨ Lainnya</option>
+  <option value="Tidak ada">Tanpa alasan</option>
+</select>
+<button id="tombolFilter" type="button">Terapkan Filter</button>
+<button id="tombolResetFilter" type="button">Reset</button>
 </div>
   <ul id="daftarPengeluaran"></ul>
 
   <h3>Total: Rp <span id="totalPengeluaran">0</span></h3>
   <div id="ringkasanPeriode"></div>
   <div id="ringkasanKategori"></div>
-  
+   <div id="statistikBox"></div>
+<div id="statistikAlasanBox"></div>
+<div id="grafikBox">
+  <h4 style="margin: 0 0 10px 0; color: #2c3e50; font-size: 16px;">📊 Grafik Pengeluaran per Kategori</h4>
+  <canvas id="grafikKategori"></canvas>
+</div>
+
+<div id="exportBox">
+  <h4 style="margin: 0 0 10px 0; color: #2c3e50; font-size: 16px;">📥 Export Data</h4>
+  <p style="margin: 0 0 10px 0; font-size: 13px; color: #666;">Akan export <b>sesuai filter yang aktif</b>. Reset filter dulu kalau mau export semua.</p>
+  <button id="tombolExportCSV" type="button" style="background-color: #16a085; margin-bottom: 8px;">📥 Export CSV (Excel)</button>
+  <button id="tombolExportJSON" type="button" style="background-color: #8e44ad;">📥 Export JSON (Backup)</button>
+</div>
+  <div id="toastBox"></div>
     
       <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
@@ -136,44 +278,124 @@ const firebaseConfig = {
   const db = firebase.firestore();
   let daftar = [];
   let total = 0;
-let filterAktif = { dari: null, sampai: null };
+let filterAktif = { dari: null, sampai: null, kategori: null, alasan: null };
+  let toastTimer = null;
+function showToast(pesan, tipe) {
+  let box = document.getElementById("toastBox");
+  box.textContent = pesan;
+  box.className = "show " + (tipe || "info");
+  if (toastTimer) clearTimeout(toastTimer);
+  toastTimer = setTimeout(function() {
+    box.className = "";
+  }, 2500);
+}
   function tampilkanUlang() {
   document.getElementById("daftarPengeluaran").innerHTML = "";
   total = 0;
 
   let dataTampil = daftar;
-  if (filterAktif.dari && filterAktif.sampai) {
-    dataTampil = daftar.filter(function(item) {
-      return item.tanggalISO >= filterAktif.dari && item.tanggalISO <= filterAktif.sampai;
-    });
-  }
-
+if (filterAktif.dari && filterAktif.sampai) {
+  dataTampil = dataTampil.filter(function(item) {
+    return item.tanggalISO >= filterAktif.dari && item.tanggalISO <= filterAktif.sampai;
+  });
+}
+if (filterAktif.kategori) {
+  dataTampil = dataTampil.filter(function(item) {
+    return item.kategori === filterAktif.kategori;
+  });
+}
+if (filterAktif.alasan) {
+  dataTampil = dataTampil.filter(function(item) {
+    let alasanItem = item.trigger || "Tidak ada";
+    return alasanItem === filterAktif.alasan;
+  });
+}
   dataTampil.forEach(function(item, index) {
       let li = document.createElement("li");
-      li.textContent = item.tanggal + " | [" + item.kategori + "] " + item.nama + " - Rp " + item.jumlah.toLocaleString("id-ID") + " ";
+let triggerTampil = item.trigger && item.trigger !== "Tidak ada" ? " ✨" + item.trigger : "";
+li.textContent = item.tanggal + " | [" + item.kategori + "] " + item.nama + triggerTampil + " - Rp " + item.jumlah.toLocaleString("id-ID") + " ";
 
-      let tombolHapus = document.createElement("button");
-      tombolHapus.textContent = "Hapus";
-      tombolHapus.style.marginLeft = "10px";
-      tombolHapus.style.width = "auto";
-      tombolHapus.style.backgroundColor = "#e74c3c";
-      tombolHapus.style.padding = "5px 10px";
+        // Tombol Edit
+  let tombolEdit = document.createElement("button");
+  tombolEdit.textContent = "Edit";
+  tombolEdit.style.marginLeft = "10px";
+  tombolEdit.style.width = "auto";
+  tombolEdit.style.backgroundColor = "#3498db";
+  tombolEdit.style.padding = "5px 10px";
 
-      tombolHapus.addEventListener("click", function() {
-  db.collection("pengeluaran").doc(item.id).delete();
+  tombolEdit.addEventListener("click", function() {
+
+let namaBaru = prompt("Nama pengeluaran:", item.nama);
+if (namaBaru === null) return;
+
+  let jumlahBaru = prompt("Jumlah (Rp):", item.jumlah);
+  if (jumlahBaru === null) return;
+  jumlahBaru = Number(jumlahBaru.replace(/\./g, ""));
+  if (isNaN(jumlahBaru) || jumlahBaru <= 0) {
+    alert("Jumlah tidak valid!");
+    return;
+  }
+
+  let tanggalBaru = prompt("Tanggal (YYYY-MM-DD):", item.tanggalISO);
+  if (tanggalBaru === null) return;
+
+  let kategoriBaru = prompt(
+    "Kategori (Konsumsi/Kesehatan/Transport/Hiburan/Tagihan/Pendidikan/Lainnya):",
+    item.kategori
+  );
+  if (kategoriBaru === null) return;
+
+  let alasanBaru = prompt(
+    "Alasan (Lapar/Bosan/Stress/Sosial/Kebutuhan/Iseng/Hadiah/Lainnya/Tidak ada):",
+    item.trigger || "Tidak ada"
+  );
+  if (alasanBaru === null) return;
+
+
+let tanggalTampil = new Date(tanggalBaru).toLocaleDateString("id-ID");
+
+
+    db.collection("pengeluaran").doc(item.id).update({
+    nama: namaBaru,
+    jumlah: jumlahBaru,
+    kategori: kategoriBaru,
+    trigger: alasanBaru || "Tidak ada",
+    tanggal: tanggalTampil,
+    tanggalISO: tanggalBaru
+  }).then(function() {
+    showToast("✓ Data diupdate", "success");
+  }).catch(function(error) {
+    showToast("✗ Gagal update: " + error.message, "error");
+  });
 });
 
-      li.appendChild(tombolHapus);
-      document.getElementById("daftarPengeluaran").appendChild(li);
-      total += item.jumlah;
-    });
+
+  // Tombol Hapus
+  let tombolHapus = document.createElement("button");
+  tombolHapus.textContent = "Hapus";
+  tombolHapus.style.marginLeft = "10px";
+  tombolHapus.style.width = "auto";
+  tombolHapus.style.backgroundColor = "#e74c3c";
+  tombolHapus.style.padding = "5px 10px";
+
+  tombolHapus.addEventListener("click", function() {
+    if (confirm("Hapus data ini?")) {
+      db.collection("pengeluaran").doc(item.id).delete();
+    }
+  });
+
+  li.appendChild(tombolEdit);
+  li.appendChild(tombolHapus);
+  document.getElementById("daftarPengeluaran").appendChild(li);
+  total += item.jumlah;
+});
     document.getElementById("totalPengeluaran").textContent = total.toLocaleString("id-ID");
     let hariIniISO = new Date().toISOString().split("T")[0];
 let bulanIniISO = hariIniISO.slice(0, 7);
 
 let totalHariIni = 0;
 let totalBulanIni = 0;
-daftar.forEach(function(item) {
+dataTampil.forEach(function(item) {
   if (item.tanggalISO === hariIniISO) {
     totalHariIni += item.jumlah;
   }
@@ -193,11 +415,143 @@ document.getElementById("ringkasanPeriode").innerHTML =
       perKategori[item.kategori] += item.jumlah;
     });
 
-    let html = "";
+        let html = "";
     for (let kategori in perKategori) {
       html += "<p>" + kategori + ": Rp " + perKategori[kategori].toLocaleString("id-ID") + "</p>";
     }
-    document.getElementById("ringkasanKategori").innerHTML = html;}
+    document.getElementById("ringkasanKategori").innerHTML = html;
+
+    // === STATISTIK ===
+    let jumlahTransaksi = dataTampil.length;
+    let totalSemua = 0;
+    let transaksiTerbesar = null;
+    let hariUnik = {};
+    let hitungKategori = {};
+
+    dataTampil.forEach(function(item) {
+      totalSemua += item.jumlah;
+      if (!transaksiTerbesar || item.jumlah > transaksiTerbesar.jumlah) {
+        transaksiTerbesar = item;
+      }
+      if (item.tanggalISO) {
+        hariUnik[item.tanggalISO] = true;
+      }
+      if (!hitungKategori[item.kategori]) {
+        hitungKategori[item.kategori] = 0;
+      }
+      hitungKategori[item.kategori]++;
+    });
+
+    let jumlahHari = Object.keys(hariUnik).length;
+    let rataHarian = jumlahHari > 0 ? totalSemua / jumlahHari : 0;
+    let rataTransaksi = jumlahTransaksi > 0 ? totalSemua / jumlahTransaksi : 0;
+
+    let kategoriTerbanyak = null;
+    let maxHitung = 0;
+    for (let kat in hitungKategori) {
+      if (hitungKategori[kat] > maxHitung) {
+        maxHitung = hitungKategori[kat];
+        kategoriTerbanyak = kat;
+      }
+    }
+
+    let statHtml = "<h4>📊 Statistik</h4>";
+    if (jumlahTransaksi === 0) {
+      statHtml += "<p>Belum ada data untuk periode ini.</p>";
+    } else {
+      statHtml += "<p>Total transaksi: <span class='highlight'>" + jumlahTransaksi + " kali</span></p>";
+      statHtml += "<p>Hari terpakai: <span class='highlight'>" + jumlahHari + " hari</span></p>";
+      statHtml += "<p>Rata-rata/hari: <span class='highlight'>Rp " + Math.round(rataHarian).toLocaleString("id-ID") + "</span></p>";
+      statHtml += "<p>Rata-rata/transaksi: <span class='highlight'>Rp " + Math.round(rataTransaksi).toLocaleString("id-ID") + "</span></p>";
+      if (transaksiTerbesar) {
+        statHtml += "<p>Terbesar: <span class='highlight'>Rp " + transaksiTerbesar.jumlah.toLocaleString("id-ID") + "</span> (" + transaksiTerbesar.nama + ")</p>";
+      }
+      if (kategoriTerbanyak) {
+        statHtml += "<p>Kategori tersering: <span class='highlight'>" + kategoriTerbanyak + "</span> (" + maxHitung + "x)</p>";
+      }
+    }
+        document.getElementById("statistikBox").innerHTML = statHtml;
+// === STATISTIK ALASAN ===
+let perAlasan = {};
+let hitungAlasan = {};
+dataTampil.forEach(function(item) {
+  let alasan = item.trigger || "Tidak ada";
+  if (!perAlasan[alasan]) {
+    perAlasan[alasan] = 0;
+    hitungAlasan[alasan] = 0;
+  }
+  perAlasan[alasan] += item.jumlah;
+  hitungAlasan[alasan]++;
+});
+
+let alasanArray = Object.keys(perAlasan).map(function(k) {
+  return { nama: k, total: perAlasan[k], jumlah: hitungAlasan[k] };
+});
+alasanArray.sort(function(a, b) { return b.total - a.total; });
+
+let alasanHtml = "<h4>✨ Statistik Alasan</h4>";
+if (alasanArray.length === 0) {
+  alasanHtml += "<p>Belum ada data untuk periode ini.</p>";
+} else {
+  alasanArray.forEach(function(a) {
+    let label = a.nama === "Tidak ada" ? "Tanpa alasan" : "✨ " + a.nama;
+    alasanHtml += "<p><span>" + label + " <span style='color:#999;font-size:12px;'>(" + a.jumlah + "x)</span></span><span class='highlight'>Rp " + a.total.toLocaleString("id-ID") + "</span></p>";
+  });
+}
+document.getElementById("statistikAlasanBox").innerHTML = alasanHtml;
+    // === GRAFIK ===
+    let labelKategori = Object.keys(perKategori);
+    let dataKategori = labelKategori.map(function(k) { return perKategori[k]; });
+
+    if (window.grafikInstance) {
+      window.grafikInstance.destroy();
+    }
+
+    if (labelKategori.length === 0) {
+      document.getElementById("grafikBox").style.display = "none";
+    } else {
+      document.getElementById("grafikBox").style.display = "block";
+      let ctx = document.getElementById("grafikKategori").getContext("2d");
+      window.grafikInstance = new Chart(ctx, {
+        type: "bar",
+        data: {
+          labels: labelKategori,
+          datasets: [{
+            label: "Pengeluaran (Rp)",
+            data: dataKategori,
+            backgroundColor: [
+              "#3498db", "#e74c3c", "#f39c12", "#9b59b6",
+              "#1abc9c", "#34495e", "#e67e22"
+            ],
+            borderRadius: 6
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              callbacks: {
+                label: function(context) {
+                  return "Rp " + context.parsed.y.toLocaleString("id-ID");
+                }
+              }
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              ticks: {
+                callback: function(value) {
+                  return "Rp " + value.toLocaleString("id-ID");
+                }
+              }
+            }
+          }
+        }
+      });
+    }
+}
 
   document.getElementById("tombolTambah").addEventListener("click", function() {
     let nama = document.getElementById("namaPengeluaran").value;
@@ -210,32 +564,43 @@ let jumlah = Number(jumlahMentah);
   return;
 }
 
-    let tanggalISO = document.getElementById("tanggalManual").value;
+        let tanggalISO = document.getElementById("tanggalManual").value;
 let tanggalSekarang = new Date(tanggalISO).toLocaleDateString("id-ID");
+let trigger = document.getElementById("triggerPengeluaran").value;
 db.collection("pengeluaran").add({
   nama: nama,
   jumlah: jumlah,
   kategori: kategori,
+  trigger: trigger || "Tidak ada",
   tanggal: tanggalSekarang,
   tanggalISO: tanggalISO
+}).then(function() {
+  showToast("✓ Data tersimpan", "success");
 }).catch(function(error) {
-  alert("Gagal simpan data: " + error.message);
+  showToast("✗ Gagal simpan: " + error.message, "error");
 });
 
-    document.getElementById("namaPengeluaran").value = "";
-    document.getElementById("jumlahPengeluaran").value = "";
-  });
+      document.getElementById("namaPengeluaran").value = "";
+  document.getElementById("jumlahPengeluaran").value = "";
+  document.getElementById("triggerPengeluaran").value = "";
+});
 document.getElementById("tombolFilter").addEventListener("click", function() {
   filterAktif.dari = document.getElementById("filterDari").value;
   filterAktif.sampai = document.getElementById("filterSampai").value;
+  filterAktif.kategori = document.getElementById("filterKategori").value;
+  filterAktif.alasan = document.getElementById("filterAlasan").value;
   tampilkanUlang();
 });
 
 document.getElementById("tombolResetFilter").addEventListener("click", function() {
   filterAktif.dari = null;
   filterAktif.sampai = null;
+  filterAktif.kategori = null;
+  filterAktif.alasan = null;
   document.getElementById("filterDari").value = "";
   document.getElementById("filterSampai").value = "";
+  document.getElementById("filterKategori").value = "";
+  document.getElementById("filterAlasan").value = "";
   tampilkanUlang();
 });
   document.getElementById("jumlahPengeluaran").addEventListener("input", function(e) {
@@ -263,6 +628,70 @@ document.getElementById("tombolResetFilter").addEventListener("click", function(
   });
     document.getElementById("tanggalManual").value = new Date().toISOString().split("T")[0];
   tampilkanUlang();
+});
+  // === FUNGSI EXPORT ===
+function ambilDataSesuaiFilter() {
+  let dataExport = daftar;
+  if (filterAktif.dari && filterAktif.sampai) {
+    dataExport = dataExport.filter(function(item) {
+      return item.tanggalISO >= filterAktif.dari && item.tanggalISO <= filterAktif.sampai;
+    });
+  }
+  if (filterAktif.kategori) {
+    dataExport = dataExport.filter(function(item) {
+      return item.kategori === filterAktif.kategori;
+    });
+  }
+  if (filterAktif.alasan) {
+    dataExport = dataExport.filter(function(item) {
+      let alasanItem = item.trigger || "Tidak ada";
+      return alasanItem === filterAktif.alasan;
+    });
+  }
+  return dataExport;
+}
+
+function buatNamaFile(ext) {
+  let hari = new Date().toISOString().split("T")[0];
+  return "budget-" + hari + "." + ext;
+}
+
+function downloadFile(isi, namaFile, tipe) {
+  let blob = new Blob([isi], { type: tipe });
+  let url = URL.createObjectURL(blob);
+  let a = document.createElement("a");
+  a.href = url;
+  a.download = namaFile;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+document.getElementById("tombolExportCSV").addEventListener("click", function() {
+  let data = ambilDataSesuaiFilter();
+  if (data.length === 0) {
+    alert("Tidak ada data untuk di-export.");
+    return;
+  }
+  let csv = "Tanggal,Nama,Kategori,Jumlah,Alasan\n";
+data.forEach(function(item) {
+  let nama = '"' + (item.nama || "").replace(/"/g, '""') + '"';
+  let kategori = '"' + (item.kategori || "").replace(/"/g, '""') + '"';
+  let alasan = '"' + (item.trigger || "Tidak ada").replace(/"/g, '""') + '"';
+  csv += item.tanggalISO + "," + nama + "," + kategori + "," + item.jumlah + "," + alasan + "\n";
+});
+  downloadFile(csv, buatNamaFile("csv"), "text/csv;charset=utf-8;");
+});
+
+document.getElementById("tombolExportJSON").addEventListener("click", function() {
+  let data = ambilDataSesuaiFilter();
+  if (data.length === 0) {
+    alert("Tidak ada data untuk di-export.");
+    return;
+  }
+  let json = JSON.stringify(data, null, 2);
+  downloadFile(json, buatNamaFile("json"), "application/json");
 });
   </script>
 </body>
