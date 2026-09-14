@@ -162,6 +162,184 @@
 #toastBox.success { background-color: #27ae60; }
 #toastBox.error   { background-color: #e74c3c; }
 #toastBox.info    { background-color: #3498db; }
+    #emptyState {
+  display: none;
+  text-align: center;
+  padding: 30px 15px;
+  color: #888;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  margin-top: 15px;
+}
+
+#emptyState .ikon-besar {
+  font-size: 48px;
+  margin-bottom: 10px;
+}
+
+#emptyState .judul {
+  font-size: 16px;
+  font-weight: bold;
+  color: #2c3e50;
+  margin-bottom: 5px;
+}
+
+#emptyState .pesan {
+  font-size: 13px;
+  color: #888;
+}
+    #indikatorFilter {
+  display: none;
+  margin-top: 10px;
+  padding: 10px 12px;
+  background-color: #e8f4fd;
+  border-left: 4px solid #3498db;
+  border-radius: 6px;
+  font-size: 13px;
+  color: #2c3e50;
+}
+
+#indikatorFilter.aktif {
+  display: block;
+}
+
+#indikatorFilter b {
+  color: #2980b9;
+}
+    /* === DARK MODE === */
+body.dark-mode {
+  background-color: #1a1a2e;
+  color: #e0e0e0;
+}
+
+body.dark-mode h1,
+body.dark-mode h3,
+body.dark-mode h4 {
+  color: #e0e0e0;
+}
+
+body.dark-mode input,
+body.dark-mode select {
+  background-color: #2d2d44;
+  color: #e0e0e0;
+  border-color: #444;
+}
+    body.dark-mode input::placeholder {
+  color: #b0b0b0;
+  opacity: 1;
+}
+
+body.dark-mode input::-webkit-input-placeholder {
+  color: #b0b0b0;
+  opacity: 1;
+}
+
+body.dark-mode li {
+  background-color: #2d2d44;
+  color: #e0e0e0;
+}
+
+body.dark-mode #emptyState {
+  background-color: #2d2d44;
+  color: #aaa;
+}
+
+body.dark-mode #emptyState .judul {
+  color: #e0e0e0;
+}
+
+body.dark-mode #indikatorFilter {
+  background-color: #1e3a5f;
+  color: #e0e0e0;
+}
+
+body.dark-mode #indikatorFilter b {
+  color: #5dade2;
+}
+
+body.dark-mode #statistikBox {
+  background-color: #2d2d44;
+  border-left-color: #3498db;
+}
+
+body.dark-mode #statistikBox h4,
+body.dark-mode #statistikBox p {
+  color: #e0e0e0;
+}
+
+body.dark-mode #statistikAlasanBox {
+  background-color: #3a3024;
+  border-left-color: #f39c12;
+}
+
+body.dark-mode #statistikAlasanBox h4,
+body.dark-mode #statistikAlasanBox p {
+  color: #e0e0e0;
+}
+
+body.dark-mode #grafikBox,
+body.dark-mode #exportBox {
+  background-color: #2d2d44;
+}
+
+body.dark-mode #grafikBox h4,
+body.dark-mode #exportBox h4 {
+  color: #ffffff !important;
+}
+
+body.dark-mode #exportBox p {
+  color: #c0c0c0 !important;
+}
+
+body.dark-mode #exportBox p b {
+  color: #e0e0e0 !important;
+}
+
+body.dark-mode .filter-tanggal h3,
+body.dark-mode .filter-tanggal label {
+  color: #e0e0e0;
+}
+    body.dark-mode #grafikBox {
+  color: #e0e0e0;
+}
+
+body.dark-mode #grafikBox canvas {
+  filter: brightness(1.1);
+}
+
+body.dark-mode h3 {
+  color: #ffffff !important;
+}
+
+body.dark-mode #totalPengeluaran {
+  color: #2ecc71;
+}
+
+body.dark-mode #ringkasanPeriode,
+body.dark-mode #ringkasanKategori {
+  color: #e0e0e0;
+}
+
+body.dark-mode #ringkasanPeriode p,
+body.dark-mode #ringkasanKategori p {
+  color: #e0e0e0;
+}
+
+body.dark-mode #ringkasanPeriode b,
+body.dark-mode #ringkasanKategori b {
+  color: #ffffff;
+}
+    /* Jumlah hitung alasan — light mode */
+.jumlah-alasan {
+  font-size: 12px;
+  color: #666;
+}
+
+/* Jumlah hitung alasan — dark mode */
+body.dark-mode .jumlah-alasan {
+  color: #b0b0b0;
+}
     .filter-tanggal {
   margin-bottom: 15px;
 }
@@ -178,9 +356,12 @@
   </style>
 </head>
 <body>
-  <div style="display: flex; justify-content: space-between; align-items: center;">
-  <h1>Expense Tracker Saya</h1>
-  <button id="tombolToggleFilter" type="button" style="width: auto; padding: 8px 12px; font-size: 20px; background-color: #27a860;">☰</button>
+    <div style="display: flex; justify-content: space-between; align-items: center; gap: 8px;">
+  <h1 style="margin: 0;">Expense Tracker Saya</h1>
+  <div style="display: flex; gap: 8px;">
+    <button id="tombolDarkMode" type="button" style="width: auto; padding: 8px 12px; font-size: 20px; background-color: #34495e;">🌙</button>
+    <button id="tombolToggleFilter" type="button" style="width: auto; padding: 8px 12px; font-size: 20px; background-color: #27a860;">☰</button>
+  </div>
 </div>
 
   <input type="text" id="namaPengeluaran" placeholder="Nama pengeluaran">
@@ -241,7 +422,13 @@
 <button id="tombolFilter" type="button">Terapkan Filter</button>
 <button id="tombolResetFilter" type="button">Reset</button>
 </div>
+  <div id="indikatorFilter"></div>
   <ul id="daftarPengeluaran"></ul>
+  <div id="emptyState">
+  <div class="ikon-besar">📭</div>
+  <div class="judul">Belum ada pengeluaran</div>
+  <div class="pesan">Yuk mulai catat pengeluaran pertama Anda dengan form di atas!</div>
+</div>
 
   <h3>Total: Rp <span id="totalPengeluaran">0</span></h3>
   <div id="ringkasanPeriode"></div>
@@ -279,6 +466,21 @@ const firebaseConfig = {
   let daftar = [];
   let total = 0;
 let filterAktif = { dari: null, sampai: null, kategori: null, alasan: null };
+// === DARK MODE ===
+function setWarnaGrafik() {
+  let dark = document.body.classList.contains("dark-mode");
+  window.warnaGrafik = dark ? "#e0e0e0" : "#333";
+  window.warnaGrid = dark ? "rgba(255,255,255,0.15)" : "rgba(0,0,0,0.1)";
+}
+
+function initDarkMode() {
+  let mode = localStorage.getItem("darkMode");
+  if (mode === "on") {
+    document.body.classList.add("dark-mode");
+    document.getElementById("tombolDarkMode").textContent = "☀️";
+  }
+  setWarnaGrafik();
+}
   let toastTimer = null;
 function showToast(pesan, tipe) {
   let box = document.getElementById("toastBox");
@@ -309,6 +511,32 @@ if (filterAktif.alasan) {
     let alasanItem = item.trigger || "Tidak ada";
     return alasanItem === filterAktif.alasan;
   });
+}
+    let emptyBox = document.getElementById("emptyState");
+if (dataTampil.length === 0) {
+  emptyBox.style.display = "block";
+} else {
+  emptyBox.style.display = "none";
+}
+
+// Indikator filter aktif
+let indikator = document.getElementById("indikatorFilter");
+let filterAktifList = [];
+if (filterAktif.dari && filterAktif.sampai) {
+  filterAktifList.push("Tanggal " + filterAktif.dari + " s/d " + filterAktif.sampai);
+}
+if (filterAktif.kategori) {
+  filterAktifList.push("Kategori: " + filterAktif.kategori);
+}
+if (filterAktif.alasan) {
+  let labelAlasan = filterAktif.alasan === "Tidak ada" ? "Tanpa alasan" : "✨ " + filterAktif.alasan;
+  filterAktifList.push("Alasan: " + labelAlasan);
+}
+if (filterAktifList.length > 0) {
+  indikator.innerHTML = "🔵 <b>Filter aktif:</b> " + filterAktifList.join(" • ");
+  indikator.classList.add("aktif");
+} else {
+  indikator.classList.remove("aktif");
 }
   dataTampil.forEach(function(item, index) {
       let li = document.createElement("li");
@@ -495,8 +723,7 @@ if (alasanArray.length === 0) {
 } else {
   alasanArray.forEach(function(a) {
     let label = a.nama === "Tidak ada" ? "Tanpa alasan" : "✨ " + a.nama;
-    alasanHtml += "<p><span>" + label + " <span style='color:#999;font-size:12px;'>(" + a.jumlah + "x)</span></span><span class='highlight'>Rp " + a.total.toLocaleString("id-ID") + "</span></p>";
-  });
+    alasanHtml += "<p><span>" + label + " <span class='jumlah-alasan'>(" + a.jumlah + "x)</span></span><span class='highlight'>Rp " + a.total.toLocaleString("id-ID") + "</span></p>";  });
 }
 document.getElementById("statistikAlasanBox").innerHTML = alasanHtml;
     // === GRAFIK ===
@@ -527,28 +754,34 @@ document.getElementById("statistikAlasanBox").innerHTML = alasanHtml;
           }]
         },
         options: {
-          responsive: true,
-          plugins: {
-            legend: { display: false },
-            tooltip: {
-              callbacks: {
-                label: function(context) {
-                  return "Rp " + context.parsed.y.toLocaleString("id-ID");
-                }
-              }
-            }
-          },
-          scales: {
-            y: {
-              beginAtZero: true,
-              ticks: {
-                callback: function(value) {
-                  return "Rp " + value.toLocaleString("id-ID");
-                }
-              }
-            }
-          }
+  responsive: true,
+  plugins: {
+    legend: { display: false },
+    tooltip: {
+      callbacks: {
+        label: function(context) {
+          return "Rp " + context.parsed.y.toLocaleString("id-ID");
         }
+      }
+    }
+  },
+  scales: {
+    x: {
+      ticks: { color: window.warnaGrafik || "#333" },
+      grid: { color: window.warnaGrid || "rgba(0,0,0,0.1)" }
+    },
+    y: {
+      beginAtZero: true,
+      ticks: {
+        color: window.warnaGrafik || "#333",
+        callback: function(value) {
+          return "Rp " + value.toLocaleString("id-ID");
+        }
+      },
+      grid: { color: window.warnaGrid || "rgba(0,0,0,0.1)" }
+    }
+  }
+}
       });
     }
 }
@@ -619,6 +852,16 @@ document.getElementById("tombolResetFilter").addEventListener("click", function(
     panel.style.display = "none";
   }
 });  
+  document.getElementById("tombolDarkMode").addEventListener("click", function() {
+  document.body.classList.toggle("dark-mode");
+  let aktif = document.body.classList.contains("dark-mode");
+  this.textContent = aktif ? "☀️" : "🌙";
+  localStorage.setItem("darkMode", aktif ? "on" : "off");
+  setWarnaGrafik();
+  tampilkanUlang();
+});
+
+initDarkMode();
   db.collection("pengeluaran").orderBy("tanggalISO").onSnapshot(function(snapshot) {
   daftar = [];
   snapshot.forEach(function(doc) {
