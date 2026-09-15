@@ -598,6 +598,7 @@ body.dark-mode #ringkasanKategori b {
   <div style="display: flex; gap: 8px;">
     <button id="tombolDarkMode" type="button" style="width: auto; padding: 8px 12px; font-size: 20px; background-color: #34495e;">🌙</button>
     <button id="tombolToggleFilter" type="button" style="width: auto; padding: 8px 12px; font-size: 20px; background-color: #27a860;">☰</button>
+    <button id="tombolLogout" type="button" style="width: auto; padding: 8px 12px; font-size: 20px; background-color: #e74c3c;">🚪</button>
   </div>
 </div>
 
@@ -714,6 +715,7 @@ const firebaseConfig = {
   firebase.initializeApp(firebaseConfig);
   const db = firebase.firestore();
   const auth = firebase.auth();
+  let userAktif = null;
   let daftar = [];
   let total = 0;
 let filterAktif = { dari: null, sampai: null, kategori: null, alasan: null };
@@ -1185,6 +1187,7 @@ let jumlah = Number(jumlahMentah);
 let tanggalSekarang = new Date(tanggalISO).toLocaleDateString("id-ID");
 let trigger = document.getElementById("triggerPengeluaran").value;
 db.collection("pengeluaran").add({
+  userId: userAktif.uid,
   nama: nama,
   jumlah: jumlah,
   kategori: kategori,
@@ -1260,6 +1263,19 @@ function tampilkanPesan(pesan, tipe) {
 function resetPesan() {
   document.getElementById("pesanLogin").textContent = "";
 }
+
+function tampilkanApp() {
+  document.getElementById("halamanLogin").style.display = "none";
+  document.getElementById("halamanUtama").style.display = "block";
+}
+
+function tampilkanLogin() {
+  document.getElementById("halamanLogin").style.display = "flex";
+  document.getElementById("halamanUtama").style.display = "none";
+  document.getElementById("loginEmail").value = "";
+  document.getElementById("loginPassword").value = "";
+  resetPesan();
+}
 // === EVENT TOMBOL MASUK ===
 document.getElementById("tombolMasuk").addEventListener("click", function() {
   let email = document.getElementById("loginEmail").value.trim();
@@ -1275,8 +1291,10 @@ document.getElementById("tombolMasuk").addEventListener("click", function() {
 
   masuk(email, password)
     .then(function() {
-      // Handle sukses ada di Bagian 5
       tampilkanPesan("✓ Login berhasil!", "sukses");
+      setTimeout (function() {
+        tampilkanApp();
+      }, 500);
     })
     .catch(function(error) {
       let pesanError = "Login gagal. ";
@@ -1295,17 +1313,98 @@ document.getElementById("tombolMasuk").addEventListener("click", function() {
     });
 });
 
-initDarkMode();
-  db.collection("pengeluaran").orderBy("tanggalISO").onSnapshot(function(snapshot) {
-  daftar = [];
-  snapshot.forEach(function(doc) {
-    let item = doc.data();
-    item.id = doc.id;
-    daftar.push(item);
-  });
-    document.getElementById("tanggalManual").value = new Date().toISOString().split("T")[0];
-  tampilkanUlang();
+// === EVENT TOMBOL DAFTAR ===
+document.getElementById("tombolDaftar").addEventListener("click", function() {
+  let email = document.getElementById("loginEmail").value.trim();
+  let password = document.getElementById("loginPassword").value;
+  resetPesan();
+
+  if (!email || !password) {
+    tampilkanPesan("Email & password wajib diisi!", "error");
+    return;
+  }
+
+  if (password.length < 6) {
+    tampilkanPesan("Password minimal 6 karakter!", "error");
+    return;
+  }
+
+  tampilkanPesan("Sedang mendaftar...", "sukses");
+
+  daftarAkun(email, password)
+    .then(function() {
+      tampilkanPesan("✓ Daftar berhasil! Selamat datang!", "sukses");
+      setTimeout(function() {
+        tampilkanApp();
+      }, 800);
+    })
+    .catch(function(error) {
+      let pesanError = "Daftar gagal. ";
+      if (error.code === "auth/email-already-in-use") {
+        pesanError += "Email sudah terdaftar. Coba login atau pakai email lain.";
+      } else if (error.code === "auth/invalid-email") {
+        pesanError += "Format email tidak valid.";
+      } else if (error.code === "auth/weak-password") {
+        pesanError += "Password terlalu lemah (min 6 karakter).";
+      } else {
+        pesanError += error.message;
+      }
+      tampilkanPesan("✗ " + pesanError, "error");
+    });
 });
+
+// === LOGOUT ===
+document.getElementById("tombolLogout").addEventListener("click", function() {
+  if (confirm("Yakin mau logout?")) {
+    auth.signOut().then(function() {
+      showToast("✓ Logout berhasil", "success");
+    }).catch(function(error) {
+      showToast("✗ Gagal logout: " + error.message, "error");
+    });
+  }
+});
+
+initDarkMode();
+      
+let unsubListener = null;
+  function mulaiListenData() {
+    unsubListener = db.collection("pengeluaran")
+      .where("userId", "==", userAktif.uid)
+      .orderBy("tanggalISO")
+      .onSnapshot(function(snapshot) {
+        daftar = [];
+        snapshot.forEach(function(doc) {
+          let item = doc.data();
+          item.id = doc.id;
+          daftar.push(item);
+        });
+        document.getElementById("tanggalManual").value = new Date().toISOString().split("T")[0];
+        tampilkanUlang();
+      });
+  }
+
+  window.stopListenData = function() {
+    if (unsubListener) {
+      unsubListener();
+      unsubListener = null;
+    }
+  }
+  // === AUTO LOGIN CHECK ===
+  window.addEventListener("load", function() {
+auth.onAuthStateChanged(function(user) {
+  if (user) {
+    userAktif = user;
+    tampilkanApp();
+    mulaiListenData();
+  } else {
+    userAktif = null;
+    if (window.stopListenData) {
+      window.stopListenData();
+    }
+    tampilkanLogin();
+  }
+});
+  });
   // === FUNGSI EXPORT ===
 function ambilDataSesuaiFilter() {
   let dataExport = daftar;
