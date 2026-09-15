@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Budget Tracker</title>
+<title>Catat Pengeluaranmu</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     body {
@@ -54,7 +54,58 @@
       border-radius: 6px;
       box-shadow: 0 1px 3px rgba(0,0,0,0.1);
     }
+/* === LAYOUT ITEM TRANSAKSI === */
+.item-nama {
+  font-size: 15px;
+  font-weight: bold;
+  color: #2c3e50;
+  margin-bottom: 4px;
+}
 
+.item-detail {
+  font-size: 12px;
+  color: #888;
+  margin-bottom: 6px;
+}
+
+.item-jumlah-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+
+.item-jumlah {
+  font-size: 16px;
+  font-weight: bold;
+  color: #27ae60;
+}
+
+.item-tombol {
+  display: flex;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.item-tombol button {
+  width: auto;
+  padding: 6px 12px;
+  font-size: 13px;
+  margin: 0;
+}
+
+/* Dark mode untuk item transaksi */
+body.dark-mode .item-nama {
+  color: #ffffff;
+}
+
+body.dark-mode .item-detail {
+  color: #b0b0b0;
+}
+
+body.dark-mode .item-jumlah {
+  color: #2ecc71;
+}
     h3 {
       color: #27ae60;
       font-size: 20px;
@@ -225,15 +276,6 @@ body.dark-mode select {
   color: #e0e0e0;
   border-color: #444;
 }
-    body.dark-mode input::placeholder {
-  color: #b0b0b0;
-  opacity: 1;
-}
-
-body.dark-mode input::-webkit-input-placeholder {
-  color: #b0b0b0;
-  opacity: 1;
-}
 
 body.dark-mode li {
   background-color: #2d2d44;
@@ -267,7 +309,196 @@ body.dark-mode #statistikBox h4,
 body.dark-mode #statistikBox p {
   color: #e0e0e0;
 }
+/* === HALAMAN LOGIN === */
+#halamanLogin {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 20px;
+  background-color: #f4f4f9;
+}
 
+.login-container {
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+}
+
+.login-logo {
+  font-size: 64px;
+  margin-bottom: 10px;
+}
+
+.login-judul {
+  font-size: 26px;
+  color: #2c3e50;
+  margin: 0 0 8px 0;
+  font-weight: bold;
+}
+
+.login-subjudul {
+  font-size: 14px;
+  color: #888;
+  margin: 0 0 30px 0;
+}
+
+#halamanLogin input {
+  display: block;
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 15px;
+  box-sizing: border-box;
+  background-color: white;
+  color: #2c3e50;
+}
+
+#halamanLogin input:focus {
+  outline: none;
+  border-color: #27ae60;
+  box-shadow: 0 0 0 3px rgba(39, 174, 96, 0.15);
+}
+
+#tombolMasuk {
+  width: 100%;
+  padding: 14px;
+  background-color: #27ae60;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  cursor: pointer;
+}
+
+#tombolMasuk:hover {
+  background-color: #229954;
+}
+
+#tombolDaftar {
+  width: 100%;
+  padding: 14px;
+  background-color: transparent;
+  color: #27ae60;
+  border: 2px solid #27ae60;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+#tombolDaftar:hover {
+  background-color: #27ae60;
+  color: white;
+}
+
+.login-pesan {
+  margin-top: 15px;
+  font-size: 13px;
+  color: #e74c3c;
+  min-height: 18px;
+}
+
+/* Dark mode login */
+body.dark-mode #halamanLogin {
+  background-color: #1a1a2e;
+}
+
+body.dark-mode .login-judul {
+  color: #ffffff;
+}
+
+body.dark-mode .login-subjudul {
+  color: #b0b0b0;
+}
+
+body.dark-mode #halamanLogin input {
+  background-color: #2d2d44;
+  color: #e0e0e0;
+  border-color: #444;
+}
+
+body.dark-mode #halamanLogin input::placeholder {
+  color: #b0b0b0;
+}
+#insightBox {
+  display: none;
+  margin-top: 20px;
+  padding: 15px;
+  background-color: #eaf4ff;
+  border-radius: 8px;
+  border-left: 4px solid #3498db;
+}
+
+#insightBox.aktif {
+  display: block;
+}
+
+#insightBox h4 {
+  margin: 0 0 10px 0;
+  color: #2c3e50;
+  font-size: 16px;
+}
+
+#insightBox .insight-item {
+  margin: 8px 0;
+  padding: 8px 10px;
+  background-color: white;
+  border-radius: 6px;
+  font-size: 13px;
+  color: #444;
+  line-height: 1.5;
+  border-left: 3px solid #3498db;
+}
+
+#insightBox .insight-item.warning {
+  border-left-color: #e74c3c;
+  background-color: #fff5f5;
+}
+
+#insightBox .insight-item.positive {
+  border-left-color: #27ae60;
+  background-color: #f0fff5;
+}
+
+#insightBox .insight-item.neutral {
+  border-left-color: #f39c12;
+  background-color: #fffaf0;
+}
+
+body.dark-mode #insightBox {
+  background-color: #1e3a5f;
+  border-left-color: #3498db;
+}
+
+body.dark-mode #insightBox h4 {
+  color: #ffffff;
+}
+
+body.dark-mode #insightBox .insight-item {
+  background-color: #2d2d44;
+  color: #e0e0e0;
+  border-left-color: #3498db;
+}
+
+body.dark-mode #insightBox .insight-item.warning {
+  background-color: #3a2424;
+  border-left-color: #e74c3c;
+}
+
+body.dark-mode #insightBox .insight-item.positive {
+  background-color: #243a2d;
+  border-left-color: #27ae60;
+}
+
+body.dark-mode #insightBox .insight-item.neutral {
+  background-color: #3a3024;
+  border-left-color: #f39c12;
+}
 body.dark-mode #statistikAlasanBox {
   background-color: #3a3024;
   border-left-color: #f39c12;
@@ -330,16 +561,6 @@ body.dark-mode #ringkasanPeriode b,
 body.dark-mode #ringkasanKategori b {
   color: #ffffff;
 }
-    /* Jumlah hitung alasan — light mode */
-.jumlah-alasan {
-  font-size: 12px;
-  color: #666;
-}
-
-/* Jumlah hitung alasan — dark mode */
-body.dark-mode .jumlah-alasan {
-  color: #b0b0b0;
-}
     .filter-tanggal {
   margin-bottom: 15px;
 }
@@ -356,8 +577,24 @@ body.dark-mode .jumlah-alasan {
   </style>
 </head>
 <body>
+  <div id="halamanLogin">
+  <div class="login-container">
+    <div class="login-logo">📔</div>
+    <h1 class="login-judul">Catat Pengeluaranmu</h1>
+    <p class="login-subjudul">Kelola keuangan dengan sadar</p>
+    
+    <input type="email" id="loginEmail" placeholder="Email">
+    <input type="password" id="loginPassword" placeholder="Password">
+    
+    <button id="tombolMasuk" type="button">Masuk</button>
+    <button id="tombolDaftar" type="button">Daftar Akun Baru</button>
+    
+    <p class="login-pesan" id="pesanLogin"></p>
+  </div>
+</div>
+<div id="halamanUtama" style="display: none;">
     <div style="display: flex; justify-content: space-between; align-items: center; gap: 8px;">
-  <h1 style="margin: 0;">Expense Tracker Saya</h1>
+  <h1 style="margin: 0;">Catat Pengeluaranmu</h1>
   <div style="display: flex; gap: 8px;">
     <button id="tombolDarkMode" type="button" style="width: auto; padding: 8px 12px; font-size: 20px; background-color: #34495e;">🌙</button>
     <button id="tombolToggleFilter" type="button" style="width: auto; padding: 8px 12px; font-size: 20px; background-color: #27a860;">☰</button>
@@ -376,18 +613,23 @@ body.dark-mode .jumlah-alasan {
   <option value="Tagihan">Tagihan</option>
   <option value="Pendidikan">Pendidikan</option>  
   <option value="Lainnya">Lainnya</option>
-</select>
+  </select>
   <select id="triggerPengeluaran">
-  <option value="">Pilih Alasan (opsional)</option>
-  <option value="Lapar">Lapar</option>
-  <option value="Bosan">Bosan</option>
-  <option value="Stress">Stress</option>
-  <option value="Sosial">Sosial</option>
-  <option value="Kebutuhan">Kebutuhan</option>
-  <option value="Iseng">Iseng</option>
-  <option value="Hadiah">Hadiah</option>
-  <option value="Lainnya">Lainnya</option>
-</select>
+    <option value="">Pilih Alasan (opsional)</option>
+    <option value="Kebutuhan">Kebutuhan</option>
+    <option value="Lapar">Lapar</option>
+    <option value="Sosial">Sosial</option>
+    <option value="Senang">😊 Senang</option>
+    <option value="Reward">🎁 Reward</option>
+    <option value="Bosan">Bosan</option>
+    <option value="Iseng">Iseng</option>
+    <option value="Hadiah">Hadiah</option>
+    <option value="Stress">Stress</option>
+    <option value="Sedih">😢 Sedih</option>
+    <option value="Capek">😴 Capek</option>
+    <option value="Impulsif">⚡ Impulsif</option>
+    <option value="Lainnya">Lainnya</option>
+  </select>
   <button id="tombolTambah">Tambah</button>
 <div class="filter-tanggal" id="panelFilter" style="display: none;">
   <h3 style="margin-top: 8px; margin-bottom: 10px; font-size: 16px; color: #2c3e50;">Cari Berdasarkan Tanggal</h3>
@@ -407,18 +649,23 @@ body.dark-mode .jumlah-alasan {
   <option value="Lainnya">Lainnya</option>
 </select>
   <label>Alasan:</label>
-<select id="filterAlasan">
-  <option value="">Semua Alasan</option>
-  <option value="Lapar">✨ Lapar</option>
-  <option value="Bosan">✨ Bosan</option>
-  <option value="Stress">✨ Stress</option>
-  <option value="Sosial">✨ Sosial</option>
-  <option value="Kebutuhan">✨ Kebutuhan</option>
-  <option value="Iseng">✨ Iseng</option>
-  <option value="Hadiah">✨ Hadiah</option>
-  <option value="Lainnya">✨ Lainnya</option>
-  <option value="Tidak ada">Tanpa alasan</option>
-</select>
+  <select id="filterAlasan">
+    <option value="">Semua Alasan</option>
+    <option value="Kebutuhan">✨ Kebutuhan</option>
+    <option value="Lapar">✨ Lapar</option>
+    <option value="Sosial">✨ Sosial</option>
+    <option value="Senang">😊 Senang</option>
+    <option value="Reward">🎁 Reward</option>
+    <option value="Bosan">✨ Bosan</option>
+    <option value="Iseng">✨ Iseng</option>
+    <option value="Hadiah">✨ Hadiah</option>
+    <option value="Stress">✨ Stress</option>
+    <option value="Sedih">😢 Sedih</option>
+    <option value="Capek">😴 Capek</option>
+    <option value="Impulsif">⚡ Impulsif</option>
+    <option value="Lainnya">✨ Lainnya</option>
+    <option value="Tidak ada">Tanpa alasan</option>
+  </select>
 <button id="tombolFilter" type="button">Terapkan Filter</button>
 <button id="tombolResetFilter" type="button">Reset</button>
 </div>
@@ -435,6 +682,7 @@ body.dark-mode .jumlah-alasan {
   <div id="ringkasanKategori"></div>
    <div id="statistikBox"></div>
 <div id="statistikAlasanBox"></div>
+<div id="insightBox"></div>
 <div id="grafikBox">
   <h4 style="margin: 0 0 10px 0; color: #2c3e50; font-size: 16px;">📊 Grafik Pengeluaran per Kategori</h4>
   <canvas id="grafikKategori"></canvas>
@@ -447,9 +695,11 @@ body.dark-mode .jumlah-alasan {
   <button id="tombolExportJSON" type="button" style="background-color: #8e44ad;">📥 Export JSON (Backup)</button>
 </div>
   <div id="toastBox"></div>
+  </div>
     
       <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 <script>
       // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
@@ -463,23 +713,17 @@ const firebaseConfig = {
 };
   firebase.initializeApp(firebaseConfig);
   const db = firebase.firestore();
+  const auth = firebase.auth();
   let daftar = [];
   let total = 0;
 let filterAktif = { dari: null, sampai: null, kategori: null, alasan: null };
-// === DARK MODE ===
-function setWarnaGrafik() {
-  let dark = document.body.classList.contains("dark-mode");
-  window.warnaGrafik = dark ? "#e0e0e0" : "#333";
-  window.warnaGrid = dark ? "rgba(255,255,255,0.15)" : "rgba(0,0,0,0.1)";
-}
-
+ // === DARK MODE ===
 function initDarkMode() {
   let mode = localStorage.getItem("darkMode");
   if (mode === "on") {
     document.body.classList.add("dark-mode");
     document.getElementById("tombolDarkMode").textContent = "☀️";
   }
-  setWarnaGrafik();
 }
   let toastTimer = null;
 function showToast(pesan, tipe) {
@@ -540,9 +784,18 @@ if (filterAktifList.length > 0) {
 }
   dataTampil.forEach(function(item, index) {
       let li = document.createElement("li");
-let triggerTampil = item.trigger && item.trigger !== "Tidak ada" ? " ✨" + item.trigger : "";
-li.textContent = item.tanggal + " | [" + item.kategori + "] " + item.nama + triggerTampil + " - Rp " + item.jumlah.toLocaleString("id-ID") + " ";
+      let triggerTampil = item.trigger && item.trigger !== "Tidak ada" ? " · ✨" + item.trigger : "";
+      // Baris 1: Nama
+      let elNama = document.createElement("div");
+      elNama.className = "item-nama";
+      elNama.textContent = item.nama;
+      li.appendChild(elNama);
 
+      // Baris 2: Tanggal · Kategori · Alasan
+      let elDetail = document.createElement("div");
+      elDetail.className = "item-detail";
+      elDetail.textContent = item.tanggal + " · " + item.kategori + triggerTampil;
+      li.appendChild(elDetail);
         // Tombol Edit
   let tombolEdit = document.createElement("button");
   tombolEdit.textContent = "Edit";
@@ -574,7 +827,7 @@ if (namaBaru === null) return;
   if (kategoriBaru === null) return;
 
   let alasanBaru = prompt(
-    "Alasan (Lapar/Bosan/Stress/Sosial/Kebutuhan/Iseng/Hadiah/Lainnya/Tidak ada):",
+    "Alasan (Kebutuhan/Lapar/Sosial/Senang/Reward/Bosan/Iseng/Hadiah/Stress/Sedih/Capek/Impulsif/Lainnya/Tidak ada):",
     item.trigger || "Tidak ada"
   );
   if (alasanBaru === null) return;
@@ -612,11 +865,26 @@ let tanggalTampil = new Date(tanggalBaru).toLocaleDateString("id-ID");
     }
   });
 
-  li.appendChild(tombolEdit);
-  li.appendChild(tombolHapus);
-  document.getElementById("daftarPengeluaran").appendChild(li);
-  total += item.jumlah;
-});
+        // Baris 3: Jumlah + Tombol
+      let elJumlahRow = document.createElement("div");
+      elJumlahRow.className = "item-jumlah-row";
+
+      let elJumlah = document.createElement("div");
+      elJumlah.className = "item-jumlah";
+      elJumlah.textContent = "Rp " + item.jumlah.toLocaleString("id-ID");
+
+      let elTombol = document.createElement("div");
+      elTombol.className = "item-tombol";
+      elTombol.appendChild(tombolEdit);
+      elTombol.appendChild(tombolHapus);
+
+      elJumlahRow.appendChild(elJumlah);
+      elJumlahRow.appendChild(elTombol);
+      li.appendChild(elJumlahRow);
+
+      document.getElementById("daftarPengeluaran").appendChild(li);
+      total += item.jumlah;
+    });
     document.getElementById("totalPengeluaran").textContent = total.toLocaleString("id-ID");
     let hariIniISO = new Date().toISOString().split("T")[0];
 let bulanIniISO = hariIniISO.slice(0, 7);
@@ -699,6 +967,127 @@ document.getElementById("ringkasanPeriode").innerHTML =
       }
     }
         document.getElementById("statistikBox").innerHTML = statHtml;
+                // === INSIGHT OTOMATIS ===
+    let insightList = [];
+    let alasanEmosi = ["Bosan", "Stress", "Sedih", "Capek", "Impulsif", "Iseng"];
+    let jumlahEmosiInsight = 0;
+    let totalEmosiInsight = 0;
+    let hitungPerAlasanInsight = {};
+    let totalPerAlasanInsight = {};
+
+    dataTampil.forEach(function(item) {
+      let alasan = item.trigger || "Tidak ada";
+      if (!hitungPerAlasanInsight[alasan]) {
+        hitungPerAlasanInsight[alasan] = 0;
+        totalPerAlasanInsight[alasan] = 0;
+      }
+      hitungPerAlasanInsight[alasan]++;
+      totalPerAlasanInsight[alasan] += item.jumlah;
+      if (alasanEmosi.indexOf(alasan) !== -1) {
+        jumlahEmosiInsight++;
+        totalEmosiInsight += item.jumlah;
+      }
+    });
+
+    // Insight 1: Emosi dominan
+    if (jumlahEmosiInsight >= 2) {
+      insightList.push({
+        tipe: "warning",
+        emoji: "⚠️",
+        teks: "Ada <b>" + jumlahEmosiInsight + " transaksi</b> karena emosi (Bosan/Stress/Sedih/Capek/dll). Total <b>Rp " + totalEmosiInsight.toLocaleString("id-ID") + "</b>. Wajar kok kalau sesekali — tapi coba cek, mungkin ada cara lain mengatasi perasaannya. 💭"
+      });
+    } else if (jumlahEmosiInsight === 1) {
+      insightList.push({
+        tipe: "neutral",
+        emoji: "💭",
+        teks: "Ada <b>1 transaksi</b> karena emosi. Tidak apa-apa, yang penting kamu sadar. Refleksi kecil bisa membantu. ✨"
+      });
+    }
+
+    // Insight 2: Alasan paling sering
+    let alasanMaxInsight = null;
+    let maxHitungInsight = 0;
+    for (let a in hitungPerAlasanInsight) {
+      if (hitungPerAlasanInsight[a] > maxHitungInsight) {
+        maxHitungInsight = hitungPerAlasanInsight[a];
+        alasanMaxInsight = a;
+      }
+    }
+    if (alasanMaxInsight && maxHitungInsight >= 2) {
+      let labelMaxInsight = alasanMaxInsight === "Tidak ada" ? "Tanpa alasan" : alasanMaxInsight;
+      if (alasanEmosi.indexOf(alasanMaxInsight) !== -1) {
+        insightList.push({
+          tipe: "warning",
+          emoji: "🔍",
+          teks: "Alasan tersering: <b>" + labelMaxInsight + "</b> (" + maxHitungInsight + "x). Coba perhatikan, apa yang biasanya memicu perasaan ini?"
+        });
+      } else {
+        insightList.push({
+          tipe: "positive",
+          emoji: "✅",
+          teks: "Alasan tersering: <b>" + labelMaxInsight + "</b> (" + maxHitungInsight + "x). Bagus, pengeluaranmu cukup terencana. 👍"
+        });
+      }
+    }
+
+    // Insight 3: Rata-rata per alasan (tertinggi)
+    let alasanRataMaxInsight = null;
+    let rataMaxInsight = 0;
+    for (let a in totalPerAlasanInsight) {
+      if (a === "Tidak ada") continue;
+      let rata = totalPerAlasanInsight[a] / hitungPerAlasanInsight[a];
+      if (rata > rataMaxInsight) {
+        rataMaxInsight = rata;
+        alasanRataMaxInsight = a;
+      }
+    }
+    if (alasanRataMaxInsight && rataMaxInsight > 0) {
+      insightList.push({
+        tipe: "neutral",
+        emoji: "📊",
+        teks: "Rata-rata pengeluaran tertinggi: <b>" + alasanRataMaxInsight + "</b> = Rp " + Math.round(rataMaxInsight).toLocaleString("id-ID") + " per transaksi."
+      });
+    }
+
+    // Insight 4: Kategori dominan
+    let totalSemuaInsight = 0;
+    let kategoriTotalInsight = {};
+    dataTampil.forEach(function(item) {
+      totalSemuaInsight += item.jumlah;
+      if (!kategoriTotalInsight[item.kategori]) kategoriTotalInsight[item.kategori] = 0;
+      kategoriTotalInsight[item.kategori] += item.jumlah;
+    });
+    let katMaxInsight = null;
+    let katMaxValInsight = 0;
+    for (let k in kategoriTotalInsight) {
+      if (kategoriTotalInsight[k] > katMaxValInsight) {
+        katMaxValInsight = kategoriTotalInsight[k];
+        katMaxInsight = k;
+      }
+    }
+    if (katMaxInsight && totalSemuaInsight > 0) {
+      let persenInsight = Math.round((katMaxValInsight / totalSemuaInsight) * 100);
+      if (persenInsight >= 50) {
+        insightList.push({
+          tipe: "neutral",
+          emoji: "🎯",
+          teks: "Kategori <b>" + katMaxInsight + "</b> = <b>" + persenInsight + "%</b> dari total pengeluaranmu. Cukup dominan — cek apakah ini sesuai rencana."
+        });
+      }
+    }
+
+    // === RENDER INSIGHT ===
+    let insightBox = document.getElementById("insightBox");
+    if (insightList.length === 0) {
+      insightBox.classList.remove("aktif");
+    } else {
+      let insightHtml = "<h4>💡 Insight untukmu</h4>";
+      insightList.forEach(function(ins) {
+        insightHtml += "<div class='insight-item " + ins.tipe + "'><span class='insight-emoji'>" + ins.emoji + "</span>" + ins.teks + "</div>";
+      });
+      insightBox.innerHTML = insightHtml;
+      insightBox.classList.add("aktif");
+    }
 // === STATISTIK ALASAN ===
 let perAlasan = {};
 let hitungAlasan = {};
@@ -723,7 +1112,8 @@ if (alasanArray.length === 0) {
 } else {
   alasanArray.forEach(function(a) {
     let label = a.nama === "Tidak ada" ? "Tanpa alasan" : "✨ " + a.nama;
-    alasanHtml += "<p><span>" + label + " <span class='jumlah-alasan'>(" + a.jumlah + "x)</span></span><span class='highlight'>Rp " + a.total.toLocaleString("id-ID") + "</span></p>";  });
+    alasanHtml += "<p><span>" + label + " <span style='color:#999;font-size:12px;'>(" + a.jumlah + "x)</span></span><span class='highlight'>Rp " + a.total.toLocaleString("id-ID") + "</span></p>";
+  });
 }
 document.getElementById("statistikAlasanBox").innerHTML = alasanHtml;
     // === GRAFIK ===
@@ -754,34 +1144,28 @@ document.getElementById("statistikAlasanBox").innerHTML = alasanHtml;
           }]
         },
         options: {
-  responsive: true,
-  plugins: {
-    legend: { display: false },
-    tooltip: {
-      callbacks: {
-        label: function(context) {
-          return "Rp " + context.parsed.y.toLocaleString("id-ID");
+          responsive: true,
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              callbacks: {
+                label: function(context) {
+                  return "Rp " + context.parsed.y.toLocaleString("id-ID");
+                }
+              }
+            }
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              ticks: {
+                callback: function(value) {
+                  return "Rp " + value.toLocaleString("id-ID");
+                }
+              }
+            }
+          }
         }
-      }
-    }
-  },
-  scales: {
-    x: {
-      ticks: { color: window.warnaGrafik || "#333" },
-      grid: { color: window.warnaGrid || "rgba(0,0,0,0.1)" }
-    },
-    y: {
-      beginAtZero: true,
-      ticks: {
-        color: window.warnaGrafik || "#333",
-        callback: function(value) {
-          return "Rp " + value.toLocaleString("id-ID");
-        }
-      },
-      grid: { color: window.warnaGrid || "rgba(0,0,0,0.1)" }
-    }
-  }
-}
       });
     }
 }
@@ -857,8 +1241,58 @@ document.getElementById("tombolResetFilter").addEventListener("click", function(
   let aktif = document.body.classList.contains("dark-mode");
   this.textContent = aktif ? "☀️" : "🌙";
   localStorage.setItem("darkMode", aktif ? "on" : "off");
-  setWarnaGrafik();
-  tampilkanUlang();
+});
+// === FUNGSI AUTH ===
+function masuk(email, password) {
+  return auth.signInWithEmailAndPassword(email, password);
+}
+
+function daftarAkun(email, password) {
+  return auth.createUserWithEmailAndPassword(email, password);
+}
+
+function tampilkanPesan(pesan, tipe) {
+  let el = document.getElementById("pesanLogin");
+  el.textContent = pesan;
+  el.style.color = tipe === "error" ? "#e74c3c" : "#27ae60";
+}
+
+function resetPesan() {
+  document.getElementById("pesanLogin").textContent = "";
+}
+// === EVENT TOMBOL MASUK ===
+document.getElementById("tombolMasuk").addEventListener("click", function() {
+  let email = document.getElementById("loginEmail").value.trim();
+  let password = document.getElementById("loginPassword").value;
+  resetPesan();
+
+  if (!email || !password) {
+    tampilkanPesan("Email & password wajib diisi!", "error");
+    return;
+  }
+
+  tampilkanPesan("Sedang masuk...", "sukses");
+
+  masuk(email, password)
+    .then(function() {
+      // Handle sukses ada di Bagian 5
+      tampilkanPesan("✓ Login berhasil!", "sukses");
+    })
+    .catch(function(error) {
+      let pesanError = "Login gagal. ";
+      if (error.code === "auth/user-not-found") {
+        pesanError += "Email belum terdaftar. Klik 'Daftar Akun Baru' dulu.";
+      } else if (error.code === "auth/wrong-password") {
+        pesanError += "Password salah.";
+      } else if (error.code === "auth/invalid-email") {
+        pesanError += "Format email tidak valid.";
+      } else if (error.code === "auth/too-many-requests") {
+        pesanError += "Terlalu banyak percobaan. Coba lagi nanti.";
+      } else {
+        pesanError += error.message;
+      }
+      tampilkanPesan("✗ " + pesanError, "error");
+    });
 });
 
 initDarkMode();
