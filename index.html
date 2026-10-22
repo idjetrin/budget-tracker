@@ -1369,25 +1369,26 @@ initDarkMode();
       
 let unsubListener = null;
   function mulaiListenData() {
+    setTimeout(function() {
     unsubListener = db.collection("pengeluaran")
-     
-     
+     .where("userId", "==", userAktif.uid)
+     .orderBy("tanggalISO")
     
       .onSnapshot(function(snapshot) {
         daftar = [];
         snapshot.forEach(function(doc) {
           let item = doc.data();
           item.id = doc.id;
-          if (item.userId === userAktif.uid) {
+         
           daftar.push(item);
-          }
+          
         });
-        daftar.sort((a, b) => a.tanggalISO.localeCompare(b.tanggalISO));
+        
         document.getElementById("tanggalManual").value = new Date().toISOString().split("T")[0];
         tampilkanUlang();
       });
+  }, 1000);
   }
-
   window.stopListenData = function() {
     if (unsubListener) {
       unsubListener();
