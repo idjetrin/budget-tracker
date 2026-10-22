@@ -1369,14 +1369,19 @@ initDarkMode();
 let unsubListener = null;
   function mulaiListenData() {
     unsubListener = db.collection("pengeluaran")
-      .where("userId", "==", userAktif.uid)
+     
+     
+    
       .onSnapshot(function(snapshot) {
         daftar = [];
         snapshot.forEach(function(doc) {
           let item = doc.data();
           item.id = doc.id;
+          if (item.userId === userAktif.uid) {
           daftar.push(item);
+          }
         });
+        daftar.sort((a, b) => a.tanggalISO.localeCompare(b.tanggalISO));
         document.getElementById("tanggalManual").value = new Date().toISOString().split("T")[0];
         tampilkanUlang();
       });
