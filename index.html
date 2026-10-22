@@ -1294,6 +1294,7 @@ document.getElementById("tombolMasuk").addEventListener("click", function() {
       tampilkanPesan("✓ Login berhasil!", "sukses");
       setTimeout (function() {
         tampilkanApp();
+        mulaiListenData();
       }, 500);
     })
     .catch(function(error) {
