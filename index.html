@@ -1373,17 +1373,13 @@ let unsubListener = null;
     unsubListener = db.collection("pengeluaran")
      .where("userId", "==", userAktif.uid)
      .orderBy("tanggalISO")
-    
       .onSnapshot(function(snapshot) {
         daftar = [];
         snapshot.forEach(function(doc) {
           let item = doc.data();
           item.id = doc.id;
-         
           daftar.push(item);
-          
         });
-        
         document.getElementById("tanggalManual").value = new Date().toISOString().split("T")[0];
         tampilkanUlang();
       });
@@ -1478,3 +1474,5 @@ document.getElementById("tombolExportJSON").addEventListener("click", function()
   </script>
 </body>
 </html>
+
+
