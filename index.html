@@ -1371,6 +1371,7 @@ let unsubListener = null;
     unsubListener = db.collection("pengeluaran")
       .where("userId", "==", userAktif.uid)
       .orderBy("tanggalISO")
+      .limit(100) //
       .onSnapshot(function(snapshot) {
         daftar = [];
         snapshot.forEach(function(doc) {
